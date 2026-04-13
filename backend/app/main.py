@@ -2,7 +2,6 @@ from datetime import timedelta
 
 from fastapi import FastAPI, HTTPException, status
 from jose import JWTError
-from pydantic import BaseModel
 
 from app.auth import (
     ACCESS_TOKEN_EXPIRE_SECONDS,
@@ -11,13 +10,9 @@ from app.auth import (
     create_refresh_token,
     get_username_from_refresh_token,
 )
-from app.models import LoginRequest, Token
+from app.models import LoginRequest, RefreshRequest, Token
 
 app = FastAPI(title="JWT Authentication API", version="1.0.0")
-
-
-class RefreshRequest(BaseModel):
-    refresh_token: str
 
 
 @app.post("/token", response_model=Token, summary="Obtain JWT tokens")
