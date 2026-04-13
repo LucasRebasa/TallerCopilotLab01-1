@@ -1,26 +1,28 @@
+import os
 from datetime import datetime, timedelta, timezone
 
+import bcrypt
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
-SECRET_KEY = "supersecretkey_change_in_production"
+SECRET_KEY = os.getenv("SECRET_KEY", "supersecretkey_change_in_production")
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_SECONDS = 300
-REFRESH_TOKEN_EXPIRE_SECONDS = 86400  # 24 hours
+ACCESS_TOKEN_EXPIRE_SECONDS = int(os.getenv("ACCESS_TOKEN_EXPIRE_SECONDS", "300"))
+REFRESH_TOKEN_EXPIRE_SECONDS = int(os.getenv("REFRESH_TOKEN_EXPIRE_SECONDS", "86400"))
 
-pwd_context = CryptContext(schemes=["sha256_crypt"], deprecated="auto")
+# Pre-hashed password for "admin123" — do NOT store plain-text passwords in source code
+_ADMIN_HASHED_PASSWORD = b"$2b$12$NNtjuAcxbSeQqlvgUmLA.eWNYKZy6BenLV0VnyQlFftKj2l.0Fumq"
 
-# Fake user database
+# Fake user database (replace with a real DB in production)
 FAKE_USERS_DB = {
     "admin": {
         "username": "admin",
-        "hashed_password": pwd_context.hash("admin123"),
+        "hashed_password": _ADMIN_HASHED_PASSWORD,
     }
 }
 
 
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+def verify_password(plain_password: str, hashed_password: bytes) -> bool:
+    return bcrypt.checkpw(plain_password.encode(), hashed_password)
 
 
 def authenticate_user(username: str, password: str) -> dict | None:

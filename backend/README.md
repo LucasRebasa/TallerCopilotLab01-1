@@ -12,7 +12,7 @@ FastAPI application that exposes JWT-based authentication endpoints.
 | FastAPI | 0.111.x |
 | Uvicorn | 0.30.x |
 | python-jose | 3.3.x |
-| passlib (bcrypt) | 1.7.x |
+| bcrypt | 4.x |
 | Poetry | 1.8.x |
 
 ---
@@ -144,6 +144,6 @@ Para mayor seguridad en producción se recomienda externalizar las siguientes co
 
 | Variable | Descripción |
 |---|---|
-| `SECRET_KEY` | Clave secreta para firmar los JWT |
+| `SECRET_KEY` | Clave secreta para firmar los JWT (⚠️ obligatorio cambiar en producción) |
 | `ACCESS_TOKEN_EXPIRE_SECONDS` | Tiempo de expiración del access token (default: 300) |
 | `REFRESH_TOKEN_EXPIRE_SECONDS` | Tiempo de expiración del refresh token (default: 86400) |
